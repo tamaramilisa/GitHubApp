@@ -31,7 +31,7 @@ extension UIImageView {
         }
     }
     
-    private func imageDownloaded(image: Image?, error: Error?) {
+    private func imageDownloaded(image: KFCrossPlatformImage?, error: Error?) {
         if error == nil {
             self.image = image
         } else {
