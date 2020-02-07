@@ -1,0 +1,6 @@
+framework module RXTensions {
+  umbrella header "RXTensions-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "RXTensions",
+  "version": "0.1.0",
+  "summary": "A short description of RXTensions.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/<GITHUB_USERNAME>/EssentialPod",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "d-srd": "dino.srdoc@degordian.com"
+  },
+  "source": {
+    "git": "https://d-srd@bitbucket.org/degordianmobile/rxtensionpod.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "RXTensions/Classes/**/*",
+  "frameworks": "UIKit",
+  "dependencies": {
+    "RxSwift": [
+
+    ],
+    "RxCocoa": [
+
+    ],
+    "Alamofire": [
+
+    ]
+  },
+  "testspecs": [
+    {
+      "name": "Tests",
+      "test_type": "unit",
+      "requires_app_host": true,
+      "source_files": "RXTensions/Tests/*.{swift}"
+    }
+  ]
+}
