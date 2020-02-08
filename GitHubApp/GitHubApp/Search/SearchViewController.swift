@@ -25,6 +25,8 @@ class SearchViewController: UIViewController {
     private let activityIndicator = UIActivityIndicatorView()
     private let activityIndicatorBackgrounView = UIView()
     
+    private let refreshControl = UIRefreshControl()
+    
     private var dataSource: [SearchCellConfiguration] = [EmptyResultState.noQuery]
     
     init(viewModel: SearchViewModelProtocol) {
@@ -42,8 +44,8 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         
         render()
-        setupRx()
         setupTableView()
+        setupRx()
     }
     
     private func setupRx() {
@@ -53,14 +55,18 @@ class SearchViewController: UIViewController {
             .subscribe(onNext: { [weak self] response in
                 self?.activityIndicatorBackgrounView.isHidden = true
                 self?.activityIndicator.stopAnimating()
+                self?.refreshControl.endRefreshing()
                 switch response {
-                case .success(let repositories):
-                    self?.viewModel.reposRelay.accept(repositories)
+                case .success(let repositories, _):
+                    self?.dataSource = repositories
+                    self?.tableView.reloadData()
                 case .error(let error):
                     self?.dataSource = [error]
+                    self?.scrollToTopAndResetPagination()
                     self?.tableView.reloadData()
                 case .empty(let state):
                     self?.dataSource = [state]
+                    self?.scrollToTopAndResetPagination()
                     self?.tableView.reloadData()
                 }
             }).disposed(by: disposeBag)
@@ -71,25 +77,28 @@ class SearchViewController: UIViewController {
                 self?.filterByLabel.text = "Sort: \(filter.title)"
             }).disposed(by: disposeBag)
         
-        viewModel.reposRelay
-            .skip(1)
-            .subscribe(onNext: { [weak self] (repos) in
-                self?.dataSource = repos
-                self?.tableView.reloadData()
+        viewModel.querySubject
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] _ in
+                self?.activityIndicatorBackgrounView.isHidden = false
+                self?.activityIndicator.startAnimating()
+                
+                self?.scrollToTopAndResetPagination()
             }).disposed(by: disposeBag)
         
         customSearchBar.searchBar.rx.text
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] (text) in
                 guard let `self` = self else { return }
                 guard let `text` = text, !text.isEmpty else {
                     self.dataSource = [EmptyResultState.noQuery]
+                    self.activityIndicatorBackgrounView.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    self.scrollToTopAndResetPagination()
                     self.tableView.reloadData()
                     return
                 }
             
-                self.activityIndicatorBackgrounView.isHidden = false
-                self.activityIndicator.startAnimating()
                 self.viewModel.querySubject.onNext(text)
             }).disposed(by: disposeBag)
         
@@ -108,16 +117,17 @@ class SearchViewController: UIViewController {
                 Navigator.shared.presentFilterScreen(navigationController: self.navigationController, delegate: self)
             }.disposed(by: disposeBag)
         
-        tableView.rx.willDisplayCell
-            .map { $0.indexPath.row }
-            .withLatestFrom(viewModel.pageSubject) { ($1, $0) }
-            .filter { [weak self] (page, index) -> Bool in
-                print(page)
-                return self?.viewModel.shouldIncrementPageNumber(page: page, index: index) ?? false
-            }
-            .map { $0.0 + 1 }
-            .bind(to: viewModel.pageSubject)
-            .disposed(by: disposeBag)
+        refreshControl.rx
+            .controlEvent(UIControl.Event.valueChanged)
+            .bind { [weak self] in
+                self?.viewModel.resetPagination()
+            }.disposed(by: disposeBag)
+    }
+    
+    private func scrollToTopAndResetPagination() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+        viewModel.resetPagination()
     }
 }
 
@@ -175,10 +185,7 @@ private extension SearchViewController {
         }
         activityIndicator.style = .whiteLarge
         activityIndicator.isUserInteractionEnabled = false
-        
     }
-    
-    
 }
 
 // MARK: Table View
@@ -187,7 +194,9 @@ extension SearchViewController: UITableViewDataSource {
         tableView.register(GithubRepositoryCell.self, forCellReuseIdentifier: repositoryCellReuseIndentifier)
         tableView.register(EmptyResultsCell.self, forCellReuseIdentifier: emptyResultsCellReuseIdentifier)
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.refreshControl = refreshControl
         
         tableView.estimatedRowHeight = UITableView.automaticDimension
     }
@@ -206,6 +215,17 @@ extension SearchViewController: UITableViewDataSource {
         default:
             return configureGithubRepositoryCell(indexPath: indexPath)
         }
+    }
+}
+
+extension SearchViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard dataSource.count > 1 else { return }
+        
+        if indexPath.row == dataSource.count - 1 {
+            viewModel.nextPageSubject.onNext(())
+        }
+        
     }
 }
 
@@ -259,9 +279,9 @@ private extension SearchViewController {
 
 extension SearchViewController: FilterDelegate {
     func filterReposBy(filter: Filter) {
-        guard let query = customSearchBar.searchBar.text else { return }
         activityIndicatorBackgrounView.isHidden = false
         activityIndicator.startAnimating()
+        scrollToTopAndResetPagination()
         viewModel.filterSubject.onNext(filter)
     }
 }

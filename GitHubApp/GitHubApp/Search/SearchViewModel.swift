@@ -15,13 +15,10 @@ protocol SearchViewModelProtocol {
     
     var querySubject: PublishSubject<String> { get }
     var filterSubject: PublishSubject<Filter> { get }
-    var pageSubject: PublishSubject<Int> { get }
+    var nextPageSubject: PublishSubject<Void> { get }
     var perPage: Int { get }
     
-    var reposRelay: BehaviorRelay<[GithubRepository]> { get }
-    
-    func shouldIncrementPageNumber(page: Int, index: Int) -> Bool
-    func setupScanForRepos()
+    func resetPagination()
 }
 
 class SearchViewModel: SearchViewModelProtocol {
@@ -31,36 +28,58 @@ class SearchViewModel: SearchViewModelProtocol {
     
     var querySubject = PublishSubject<String>()
     var filterSubject = PublishSubject<Filter>()
-    var pageSubject = PublishSubject<Int>()
-    var perPage = 30
-    
-    var reposRelay = BehaviorRelay<[GithubRepository]>(value: [])
+    var nextPageSubject = PublishSubject<Void>()
+    var perPage: Int = 30
+    var isLoadingPage = false
+    private var nextPage = 0
+    private var reposArray: [GithubRepository] = []
+    private var totalNoOfItems: Int = 0
     
     private let disposeBag = DisposeBag()
     
     init(networkingService: SearchNetworkingServiceProtocol) {
         self.networkingService = networkingService
         
-        searchResult = Observable
-            .combineLatest(querySubject, filterSubject.startWith(Filter.bestMatch), pageSubject.startWith(1)) { ($0, $1, $2)}
-            .flatMapLatest({ [weak self] (query, filter, page) -> Observable<GithubRepositoryServerResult> in
-                guard let `self` = self else { return Observable.empty() }
-                return self.networkingService.search(query: query, sortBy: filter.filter, page: page, perPage: self.perPage)
+        let pageChangedSubject = nextPageSubject.startWith(())
+            .filter { [weak self] _ -> Bool in
+                guard let `self` = self, self.nextPage <= (self.totalNoOfItems / self.perPage) else { return false }
+                return !self.isLoadingPage}
+            .do(onNext: { [weak self] _ in
+                self?.nextPage += 1
             })
+        
+        searchResult = Observable
+            .combineLatest(querySubject.distinctUntilChanged(), filterSubject.startWith(Filter.bestMatch), pageChangedSubject.startWith()) { ($0, $1, $2)}
+            .flatMapLatest({ [weak self] (query, filter, _) -> Observable<GithubRepositoryServerResult> in
+                guard let `self` = self else { return Observable.empty() }
+                self.isLoadingPage = true
+                return self.networkingService.search(query: query, sortBy: filter.filter, page: self.nextPage, perPage: self.perPage)
+            })
+            .map { [weak self] serverResult in
+                guard let `self` = self else { return serverResult }
+                self.isLoadingPage = false
+                return self.mapServerResult(serverResult: serverResult)
+        }
     }
     
-    func setupScanForRepos() {
-        reposRelay.scan([]) { (allRepos, newRepos) -> [GithubRepository] in
-            return allRepos + newRepos
-        }
-        .subscribe(onNext: { [weak self] (repos) in
-            self?.reposRelay.accept(repos)
-        }).disposed(by: disposeBag)
+    func resetPagination() {
+        nextPage = 0
+        nextPageSubject.onNext(())
     }
-
-    func shouldIncrementPageNumber(page: Int, index: Int) -> Bool {
-        let currentOffset = page * perPage
-        return index == currentOffset - perPage / 2
-
+    
+    private func mapServerResult(serverResult: GithubRepositoryServerResult) -> GithubRepositoryServerResult {
+        
+        switch serverResult {
+        case .success(let repos, let totalNoOfItems):
+            self.totalNoOfItems = totalNoOfItems
+            if self.nextPage == 1 {
+                self.reposArray = repos
+            } else {
+                self.reposArray.append(contentsOf: repos)
+            }
+            return .success((self.reposArray, self.totalNoOfItems))
+        default:
+            return serverResult
+        }
     }
 }

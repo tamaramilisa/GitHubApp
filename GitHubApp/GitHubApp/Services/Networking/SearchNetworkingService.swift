@@ -34,7 +34,8 @@ class SearchNetworkingService: SearchNetworkingServiceProtocol {
                 do {
                     let itemsData = try dataJson["items"].rawData()
                     let repos = try JSONDecoder().decode([GithubRepository].self, from: itemsData)
-                    return repos.isEmpty ? .empty(.noResults) : .success(repos)
+                    let totalNumberOfItems = dataJson["total_count"].intValue
+                    return repos.isEmpty ? .empty(.noResults) : .success((repos, totalNumberOfItems))
                 } catch let err {
                     return .error(GithubError(err))
                 }

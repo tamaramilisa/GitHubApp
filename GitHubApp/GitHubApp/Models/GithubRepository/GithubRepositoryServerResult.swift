@@ -7,7 +7,8 @@
 //
 
 enum GithubRepositoryServerResult {
-    case success([GithubRepository])
+    // Array of results and total number of items
+    case success(([GithubRepository],Int))
     case error(GithubError)
     case empty(EmptyResultState)
 }
