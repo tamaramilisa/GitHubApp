@@ -31,8 +31,6 @@
 //  The name and characters used in the demo of this software are property of their
 //  respective owners.
 
-#if !os(watchOS)
-#if canImport(UIKit)
 import UIKit
 import ImageIO
 
@@ -122,15 +120,11 @@ open class AnimatedImageView: UIImageView {
     /// Default is `true`.
     public var needsPrescaling = true
 
-    /// Decode the GIF frames in background thread before using. It will decode frames data and do a off-screen
-    /// rendering to extract pixel information in background. This can reduce the main thread CPU usage.
-    public var backgroundDecode = true
-
     /// The animation timer's run loop mode. Default is `RunLoop.Mode.common`.
     /// Set this property to `RunLoop.Mode.default` will make the animation pause during UIScrollView scrolling.
     public var runLoopMode = KFRunLoopModeCommon {
         willSet {
-            guard runLoopMode != newValue else { return }
+            guard runLoopMode == newValue else { return }
             stopAnimating()
             displayLink.remove(from: .main, forMode: runLoopMode)
             displayLink.add(to: .main, forMode: newValue)
@@ -178,7 +172,7 @@ open class AnimatedImageView: UIImageView {
     }()
     
     // MARK: - Override
-    override open var image: KFCrossPlatformImage? {
+    override open var image: Image? {
         didSet {
             if image != oldValue {
                 reset()
@@ -257,7 +251,6 @@ open class AnimatedImageView: UIImageView {
                 preloadQueue: preloadQueue)
             animator.delegate = self
             animator.needsPrescaling = needsPrescaling
-            animator.backgroundDecode = backgroundDecode
             animator.prepareFramesAsynchronously()
             self.animator = animator
         }
@@ -293,12 +286,11 @@ open class AnimatedImageView: UIImageView {
         // See [#718](https://github.com/onevcat/Kingfisher/issues/718)
         // By setting CADisableMinimumFrameDuration to YES in Info.plist may
         // cause the preferredFramesPerSecond being 0
-        let preferredFramesPerSecond = displayLink.preferredFramesPerSecond
-        if preferredFramesPerSecond == 0 {
+        if displayLink.preferredFramesPerSecond == 0 {
             duration = displayLink.duration
         } else {
             // Some devices (like iPad Pro 10.5) will have a different FPS.
-            duration = 1.0 / TimeInterval(preferredFramesPerSecond)
+            duration = 1.0 / Double(displayLink.preferredFramesPerSecond)
         }
 
         animator.shouldChangeFrame(with: duration) { [weak self] hasNewFrame in
@@ -361,7 +353,7 @@ extension AnimatedImageView {
         private let maxRepeatCount: RepeatCount
 
         private let maxTimeStep: TimeInterval = 1.0
-        private let animatedFrames = SafeArray<AnimatedFrame>()
+        private var animatedFrames = [AnimatedFrame]()
         private var frameCount = 0
         private var timeSinceLastFrameChange: TimeInterval = 0.0
         private var currentRepeatCount: UInt = 0
@@ -369,9 +361,6 @@ extension AnimatedImageView {
         var isFinished: Bool = false
 
         var needsPrescaling = true
-
-        var backgroundDecode = true
-
         weak var delegate: AnimatorDelegate?
 
         // Total duration of one animation loop
@@ -449,12 +438,12 @@ extension AnimatedImageView {
             self.preloadQueue = preloadQueue
         }
 
-        func frame(at index: Int) -> KFCrossPlatformImage? {
-            return animatedFrames[index]?.image
+        func frame(at index: Int) -> Image? {
+            return animatedFrames[safe: index]?.image
         }
 
         func duration(at index: Int) -> TimeInterval {
-            return animatedFrames[index]?.duration  ?? .infinity
+            return animatedFrames[safe: index]?.duration  ?? .infinity
         }
 
         func prepareFramesAsynchronously() {
@@ -485,36 +474,32 @@ extension AnimatedImageView {
             (0..<frameCount).forEach { index in
                 let frameDuration = GIFAnimatedImage.getFrameDuration(from: imageSource, at: index)
                 duration += min(frameDuration, maxTimeStep)
-                animatedFrames.append(AnimatedFrame(image: nil, duration: frameDuration))
+                animatedFrames += [AnimatedFrame(image: nil, duration: frameDuration)]
 
                 if index > maxFrameCount { return }
-                animatedFrames[index] = animatedFrames[index]?.makeAnimatedFrame(image: loadFrame(at: index))
+                animatedFrames[index] = animatedFrames[index].makeAnimatedFrame(image: loadFrame(at: index))
             }
 
             self.loopDuration = duration
         }
 
         private func resetAnimatedFrames() {
-            animatedFrames.removeAll()
+            animatedFrames = []
         }
 
         private func loadFrame(at index: Int) -> UIImage? {
-            let options: [CFString: Any] = [
-                kCGImageSourceCreateThumbnailFromImageIfAbsent: true,
-                kCGImageSourceCreateThumbnailWithTransform: true,
-                kCGImageSourceShouldCacheImmediately: true,
-                kCGImageSourceThumbnailMaxPixelSize: max(size.width, size.height)
-            ]
-
-            let resize = needsPrescaling && size != .zero
-            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource,
-                                                                index,
-                                                                resize ? options as CFDictionary : nil) else {
+            guard let image = CGImageSourceCreateImageAtIndex(imageSource, index, nil) else {
                 return nil
             }
 
-            let image = KFCrossPlatformImage(cgImage: cgImage)
-            return backgroundDecode ? image.kf.decoded : image
+            let scaledImage: CGImage
+            if needsPrescaling, size != .zero {
+                scaledImage = image.kf.resize(to: size, for: contentMode)
+            } else {
+                scaledImage = image
+            }
+
+            return Image(cgImage: scaledImage)
         }
         
         private func updatePreloadedFrames() {
@@ -522,10 +507,10 @@ extension AnimatedImageView {
                 return
             }
 
-            animatedFrames[previousFrameIndex] = animatedFrames[previousFrameIndex]?.placeholderFrame
+            animatedFrames[previousFrameIndex] = animatedFrames[previousFrameIndex].placeholderFrame
 
             preloadIndexes(start: currentFrameIndex).forEach { index in
-                guard let currentAnimatedFrame = animatedFrames[index] else { return }
+                let currentAnimatedFrame = animatedFrames[index]
                 if !currentAnimatedFrame.isPlaceholder { return }
                 animatedFrames[index] = currentAnimatedFrame.makeAnimatedFrame(image: loadFrame(at: index))
             }
@@ -533,11 +518,10 @@ extension AnimatedImageView {
 
         private func incrementCurrentFrameIndex() {
             currentFrameIndex = increment(frameIndex: currentFrameIndex)
-            if isLastFrame {
+            if isReachMaxRepeatCount && isLastFrame {
+                isFinished = true
+            } else if currentFrameIndex == 0 {
                 currentRepeatCount += 1
-                if isReachMaxRepeatCount {
-                    isFinished = true
-                }
                 delegate?.animator(self, didPlayAnimationLoops: currentRepeatCount)
             }
         }
@@ -567,49 +551,8 @@ extension AnimatedImageView {
     }
 }
 
-class SafeArray<Element> {
-    private var array: Array<Element> = []
-    private let lock = NSLock()
-    
-    subscript(index: Int) -> Element? {
-        get {
-            lock.lock()
-            defer { lock.unlock() }
-            return array.indices ~= index ? array[index] : nil
-        }
-        
-        set {
-            lock.lock()
-            defer { lock.unlock() }
-            if let newValue = newValue, array.indices ~= index {
-                array[index] = newValue
-            }
-        }
-    }
-    
-    var count : Int {
-        lock.lock()
-        defer { lock.unlock() }
-        return array.count
-    }
-    
-    func reserveCapacity(_ count: Int) {
-        lock.lock()
-        defer { lock.unlock() }
-        array.reserveCapacity(count)
-    }
-    
-    func append(_ element: Element) {
-        lock.lock()
-        defer { lock.unlock() }
-        array += [element]
-    }
-    
-    func removeAll() {
-        lock.lock()
-        defer { lock.unlock() }
-        array = []
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices ~= index ? self[index] : nil
     }
 }
-#endif
-#endif

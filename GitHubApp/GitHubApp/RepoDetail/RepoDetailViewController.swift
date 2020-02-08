@@ -48,7 +48,7 @@ class RepoDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationItem.largeTitleDisplayMode = .never
         title = "Repo details"
-        view.backgroundColor = UIColor.appColor(.backgroundColor)
+        view.backgroundColor = UIColor.AppColors.backgroundColor
     }
 
     required init?(coder: NSCoder) {
@@ -138,7 +138,7 @@ private extension RepoDetailViewController {
             make.right.equalToSuperview().inset(20)
         }
         repoTitleLabel.text = viewModel.githubRepo.title
-        repoTitleLabel.textColor = UIColor.appColor(.titleTextColor)
+        repoTitleLabel.textColor = UIColor.AppColors.titleTextColor
         repoTitleLabel.font = UIFont.systemFont(ofSize: 24)
         repoTitleLabel.numberOfLines = 0
         
@@ -253,7 +253,7 @@ private extension RepoDetailViewController {
             let createdDate = date[0].split(separator: "-")
             createdAtLabel.text = "Created at: \(createdDate[2]).\(createdDate[1]).\(createdDate[0])."
         }
-        createdAtLabel.textColor = UIColor.appColor(.titleTextColor)
+        createdAtLabel.textColor = UIColor.AppColors.titleTextColor
         createdAtLabel.font = UIFont.systemFont(ofSize: 16)
         
         view.addSubview(updatedAtLabel)
@@ -266,7 +266,7 @@ private extension RepoDetailViewController {
             let updatedDate = date[0].split(separator: "-")
             updatedAtLabel.text = "Updated at: \(updatedDate[2]).\(updatedDate[1]).\(updatedDate[0])."
         }
-        updatedAtLabel.textColor = UIColor.appColor(.titleTextColor)
+        updatedAtLabel.textColor = UIColor.AppColors.titleTextColor
         updatedAtLabel.font = UIFont.systemFont(ofSize: 16)
         
         view.addSubview(languageLabel)
@@ -276,7 +276,7 @@ private extension RepoDetailViewController {
             make .right.equalToSuperview().inset(24)
         }
         languageLabel.text = "Language: \(viewModel.githubRepo.language ?? "-")"
-        languageLabel.textColor = UIColor.appColor(.titleTextColor)
+        languageLabel.textColor = UIColor.AppColors.titleTextColor
         languageLabel.font = UIFont.systemFont(ofSize: 16)
         
         view.addSubview(descriptionLabel)
@@ -286,7 +286,7 @@ private extension RepoDetailViewController {
             make .right.equalToSuperview().inset(24)
         }
         descriptionLabel.text = "Description: \(viewModel.githubRepo.desc ?? "-")"
-        descriptionLabel.textColor = UIColor.appColor(.titleTextColor)
+        descriptionLabel.textColor = UIColor.AppColors.titleTextColor
         descriptionLabel.font = UIFont.systemFont(ofSize: 16)
         descriptionLabel.numberOfLines = 0
         

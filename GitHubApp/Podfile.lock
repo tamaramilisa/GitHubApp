@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (4.9.0)
   - CoconutBits (0.4.1)
-  - Kingfisher (5.7.1)
+  - Kingfisher (5.2.0)
   - RxAlamofire (5.0.0):
     - RxAlamofire/Core (= 5.0.0)
   - RxAlamofire/Core (5.0.0):
@@ -25,7 +25,7 @@ PODS:
 
 DEPENDENCIES:
   - CoconutBits (from `https://github.com/degordian/CoconutBits.git`, branch `swift5`)
-  - Kingfisher
+  - Kingfisher (~> 5.2.0)
   - RxAlamofire
   - RxCocoa
   - RxGesture
@@ -65,7 +65,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
   CoconutBits: abd3a777cc64b1a08f4d479e5954b654dbb2e2f7
-  Kingfisher: 176d377ad339113c99ad4980cbae687f807e20fe
+  Kingfisher: 07067cfacf371117330dceb4b4b8f5c4b691ab42
   RxAlamofire: e7875a012aff55345672d0f70a2a9cd6aeb0f211
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxGesture: 0cd8e37ff9a266e1c31f46bcaed6de1c536bc81e
@@ -75,6 +75,6 @@ SPEC CHECKSUMS:
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: 660832e27f30af3d309c3695da3d489371ff9034
+PODFILE CHECKSUM: d608e0957f95bb89209ce63021b0bc2424d06bb1
 
 COCOAPODS: 1.5.3

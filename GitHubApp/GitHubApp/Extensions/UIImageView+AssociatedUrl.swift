@@ -12,30 +12,12 @@ import Kingfisher
 
 extension UIImageView {
     
-    func setURL(_ URL: URL?, indicatorType: IndicatorType = .none) {
-        guard let url = URL else {
-            image = UIImage(named: "logo_welcome")
-            return
-        }
-        kf.indicatorType = indicatorType
-        kf.setImage(with: url,
-                    placeholder: UIImage(named: "logo_welcome"),
-                    options: [.transition(.fade(0.2))],
-                    progressBlock: nil) { [weak self] (result) in
-                        switch result {
-                        case .success(let imageResult):
-                            self?.imageDownloaded(image: imageResult.image, error: nil)
-                        case .failure(let error):
-                            self?.imageDownloaded(image: nil, error: error)
-                        }
-        }
-    }
-    
-    private func imageDownloaded(image: KFCrossPlatformImage?, error: Error?) {
-        if error == nil {
-            self.image = image
+    func setURL(_ url: URL?) {
+        if let url = url {
+            kf.setImage(with: url,
+                        options: [.transition(.fade(0.2))])
         } else {
-            self.image = UIImage(named: "logo_welcome")
+            image = UIImage(named: "logo_welcome")
         }
     }
     

@@ -31,7 +31,7 @@ class SearchViewController: UIViewController {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         title = "Search"
-        view.backgroundColor = UIColor.appColor(.backgroundColor)
+        view.backgroundColor = UIColor.AppColors.backgroundColor
     }
     
     required init?(coder: NSCoder) {
@@ -137,7 +137,7 @@ private extension SearchViewController {
             make.top.equalTo(customSearchBar.snp.bottom)
             make.height.equalTo(30)
         }
-        filterByView.backgroundColor = UIColor.appColor(.cellBackgroundColor)?.withAlphaComponent(0.05)
+        filterByView.backgroundColor = UIColor.AppColors.titleTextColor?.withAlphaComponent(0.05)
         
         filterByView.addSubview(filterByLabel)
         filterByLabel.snp.makeConstraints { (make) in
@@ -148,7 +148,7 @@ private extension SearchViewController {
         }
         filterByLabel.text = "Sort:"
         filterByLabel.font = UIFont.systemFont(ofSize: 16)
-        filterByLabel.textColor = UIColor.appColor(.titleTextColor)?.withAlphaComponent(0.5)
+        filterByLabel.textColor = UIColor.AppColors.titleTextColor?.withAlphaComponent(0.5)
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
@@ -164,7 +164,7 @@ private extension SearchViewController {
             make.height.equalTo(70)
             make.width.equalTo(70)
         }
-        activityIndicatorBackgrounView.backgroundColor = UIColor.appColor(.cellBackgroundColor)?.withAlphaComponent(0.4)
+        activityIndicatorBackgrounView.backgroundColor = UIColor.AppColors.titleTextColor?.withAlphaComponent(0.4)
         activityIndicatorBackgrounView.layer.cornerRadius = 35
         activityIndicatorBackgrounView.clipsToBounds = true
         activityIndicatorBackgrounView.isHidden = true

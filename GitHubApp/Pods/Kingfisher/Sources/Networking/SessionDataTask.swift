@@ -34,6 +34,7 @@ public class SessionDataTask {
     public typealias CancelToken = Int
 
     struct TaskCallback {
+        let onProgress: Delegate<(Int64, Int64), Void>?
         let onCompleted: Delegate<Result<ImageLoadingResult, KingfisherError>, Void>?
         let options: KingfisherParsedOptionsInfo
     }
@@ -46,10 +47,8 @@ public class SessionDataTask {
     public let task: URLSessionDataTask
     private var callbacksStore = [CancelToken: TaskCallback]()
 
-    var callbacks: [SessionDataTask.TaskCallback] {
-        lock.lock()
-        defer { lock.unlock() }
-        return Array(callbacksStore.values)
+    var callbacks: Dictionary<SessionDataTask.CancelToken, SessionDataTask.TaskCallback>.Values {
+        return callbacksStore.values
     }
 
     private var currentToken = 0

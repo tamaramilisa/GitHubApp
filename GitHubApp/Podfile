@@ -13,5 +13,5 @@ target 'GitHubApp' do
   pod 'SnapKit', '~> 5.0.0'
   pod "RxGesture"
   pod 'SwiftyJSON', '~> 4.0'
-  pod 'Kingfisher'
+  pod 'Kingfisher', '~> 5.2.0'
 end

@@ -26,13 +26,13 @@
 
 import Foundation
 
-extension CGFloat {
+extension Float {
     var isEven: Bool {
         return truncatingRemainder(dividingBy: 2.0) == 0
     }
 }
 
-#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit)
 import AppKit
 extension NSBezierPath {
     convenience init(roundedRect rect: NSRect, topLeftRadius: CGFloat, topRightRadius: CGFloat,
@@ -74,7 +74,7 @@ extension NSBezierPath {
     }
 }
 
-extension KFCrossPlatformImage {
+extension Image {
     // macOS does not support scale. This is just for code compatibility across platforms.
     convenience init?(data: Data, scale: CGFloat) {
         self.init(data: data)

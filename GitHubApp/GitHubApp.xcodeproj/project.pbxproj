@@ -28,6 +28,7 @@
 		32A3A03C23EC7A9C0085BB00 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A3A03B23EC7A9C0085BB00 /* FilterViewController.swift */; };
 		32AD0AAD23ED83890089E0B1 /* GithubError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32AD0AAC23ED83890089E0B1 /* GithubError.swift */; };
 		32AD0AAF23ED83A80089E0B1 /* EmptyResultState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32AD0AAE23ED83A80089E0B1 /* EmptyResultState.swift */; };
+		32BDBE4523EF2449002B890A /* UserStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BDBE4423EF2449002B890A /* UserStorage.swift */; };
 		32D6200B23E4681700002CD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D6200A23E4681700002CD6 /* AppDelegate.swift */; };
 		32D6201223E4681700002CD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32D6201023E4681700002CD6 /* Main.storyboard */; };
 		32D6201423E4681900002CD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32D6201323E4681900002CD6 /* Assets.xcassets */; };
@@ -64,6 +65,7 @@
 		32A3A03B23EC7A9C0085BB00 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		32AD0AAC23ED83890089E0B1 /* GithubError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubError.swift; sourceTree = "<group>"; };
 		32AD0AAE23ED83A80089E0B1 /* EmptyResultState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultState.swift; sourceTree = "<group>"; };
+		32BDBE4423EF2449002B890A /* UserStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorage.swift; sourceTree = "<group>"; };
 		32D6200723E4681700002CD6 /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32D6200A23E4681700002CD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32D6201123E4681700002CD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				32FBCBC523E582F7002268D1 /* Networking */,
+				32BDBE4423EF2449002B890A /* UserStorage.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				326B219423E9D35100CA5F04 /* CustomSearchView.swift in Sources */,
+				32BDBE4523EF2449002B890A /* UserStorage.swift in Sources */,
 				32689F3423E7195600F904B0 /* GithubUser.swift in Sources */,
 				32689F2323E5EBC500F904B0 /* GithubRepositoryCell.swift in Sources */,
 				32689F3123E6002900F904B0 /* DefaultResponse.swift in Sources */,
@@ -610,6 +614,33 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CoconutBits\"",
+					"-framework",
+					"\"Kingfisher\"",
+					"-framework",
+					"\"RXTensions\"",
+					"-framework",
+					"\"RxAlamofire\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxGesture\"",
+					"-framework",
+					"\"RxRelay\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"SwiftyJSON\"",
+					"-weak_framework",
+					SwiftUI,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tamara.GitHubApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -629,6 +660,33 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CoconutBits\"",
+					"-framework",
+					"\"Kingfisher\"",
+					"-framework",
+					"\"RXTensions\"",
+					"-framework",
+					"\"RxAlamofire\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxGesture\"",
+					"-framework",
+					"\"RxRelay\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"SwiftyJSON\"",
+					"-weak_framework",
+					SwiftUI,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tamara.GitHubApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -93,7 +93,7 @@ private extension GithubRepositoryCell {
         containerView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))
         }
-        containerView.backgroundColor = UIColor.appColor(.cellBackgroundColor)?.withAlphaComponent(0.1)
+        containerView.backgroundColor = UIColor.AppColors.titleTextColor?.withAlphaComponent(0.1)
         containerView.layer.cornerRadius = 10
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.lightGray.cgColor
@@ -138,7 +138,7 @@ private extension GithubRepositoryCell {
         }
         repositoryNameLabel.font = UIFont.systemFont(ofSize: 18)
         repositoryNameLabel.numberOfLines = 0
-        repositoryNameLabel.textColor = UIColor.appColor(.titleTextColor)
+        repositoryNameLabel.textColor = UIColor.AppColors.titleTextColor
     }
     
     func renderUsername() {

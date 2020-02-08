@@ -24,9 +24,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#if !os(watchOS)
-
-#if canImport(AppKit) && !targetEnvironment(macCatalyst)
+#if canImport(AppKit)
 import AppKit
 public typealias IndicatorView = NSView
 #else
@@ -67,16 +65,6 @@ public protocol Indicator {
     
     /// The indicator view which would be added to the super view.
     var view: IndicatorView { get }
-
-    /// The size strategy used when adding the indicator to image view.
-    /// - Parameter imageView: The super view of indicator.
-    func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy
-}
-
-public enum IndicatorSizeStrategy {
-    case intrinsicSize
-    case full
-    case size(CGSize)
 }
 
 extension Indicator {
@@ -84,13 +72,6 @@ extension Indicator {
     /// Default implementation of `centerOffset` of `Indicator`. The default value is `.zero`, means that there is
     /// no offset for the indicator view.
     public var centerOffset: CGPoint { return .zero }
-
-
-    /// Default implementation of `centerOffset` of `Indicator`. The default value is `.full`, means that the indicator
-    /// will pin to the same height and width as the image view.
-    public func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy {
-        return .full
-    }
 }
 
 // Displays a NSProgressIndicator / UIActivityIndicatorView
@@ -131,32 +112,17 @@ final class ActivityIndicator: Indicator {
         }
     }
 
-    func sizeStrategy(in imageView: KFCrossPlatformImageView) -> IndicatorSizeStrategy {
-        return .intrinsicSize
-    }
-
     init() {
         #if os(macOS)
             activityIndicatorView = NSProgressIndicator(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
             activityIndicatorView.controlSize = .small
             activityIndicatorView.style = .spinning
         #else
-            let indicatorStyle: UIActivityIndicatorView.Style
-
             #if os(tvOS)
-            if #available(tvOS 13.0, *) {
-                indicatorStyle = UIActivityIndicatorView.Style.large
-            } else {
-                indicatorStyle = UIActivityIndicatorView.Style.white
-            }
+                let indicatorStyle = UIActivityIndicatorView.Style.white
             #else
-            if #available(iOS 13.0, * ) {
-                indicatorStyle = UIActivityIndicatorView.Style.medium
-            } else {
-                indicatorStyle = UIActivityIndicatorView.Style.gray
-            }
+                let indicatorStyle = UIActivityIndicatorView.Style.gray
             #endif
-
             #if swift(>=4.2)
             activityIndicatorView = UIActivityIndicatorView(style: indicatorStyle)
             #else
@@ -166,22 +132,10 @@ final class ActivityIndicator: Indicator {
     }
 }
 
-#if canImport(UIKit)
-extension UIActivityIndicatorView.Style {
-    #if compiler(>=5.1)
-    #else
-    static let large = UIActivityIndicatorView.Style.white
-    #if !os(tvOS)
-    static let medium = UIActivityIndicatorView.Style.gray
-    #endif
-    #endif
-}
-#endif
-
 // MARK: - ImageIndicator
 // Displays an ImageView. Supports gif
 final class ImageIndicator: Indicator {
-    private let animatedImageIndicatorView: KFCrossPlatformImageView
+    private let animatedImageIndicatorView: ImageView
 
     var view: IndicatorView {
         return animatedImageIndicatorView
@@ -202,7 +156,7 @@ final class ImageIndicator: Indicator {
             return nil
         }
 
-        animatedImageIndicatorView = KFCrossPlatformImageView()
+        animatedImageIndicatorView = ImageView()
         animatedImageIndicatorView.image = image
         
         #if os(macOS)
@@ -232,5 +186,3 @@ final class ImageIndicator: Indicator {
         animatedImageIndicatorView.isHidden = true
     }
 }
-
-#endif

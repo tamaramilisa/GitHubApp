@@ -38,7 +38,7 @@ private extension CustomSearchView {
         }
         filterImageView.image = UIImage(named: "filter")
         filterImageView.contentMode = .scaleAspectFit
-        filterImageView.tintColor = UIColor.appColor(.titleTextColor)
+        filterImageView.tintColor = UIColor.AppColors.titleTextColor
         
         self.addSubview(searchBar)
         searchBar.snp.makeConstraints { (make) in

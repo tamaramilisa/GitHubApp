@@ -57,6 +57,7 @@ private extension EmptyResultsCell {
             make.left.top.right.bottom.equalToSuperview()
             make.height.equalTo(cellHeight)
         }
+        containerView.backgroundColor = UIColor.AppColors.backgroundColor
         
         containerView.addSubview(iconImageView)
         iconImageView.snp.makeConstraints { (make) in
@@ -74,7 +75,7 @@ private extension EmptyResultsCell {
             make.right.equalToSuperview().inset(24)
         }
         descriptionLabel.textAlignment = .center
-        descriptionLabel.textColor = UIColor.appColor(.titleTextColor)
+        descriptionLabel.textColor = UIColor.AppColors.titleTextColor
         descriptionLabel.font = UIFont.systemFont(ofSize: 18)
         descriptionLabel.numberOfLines = 0
         
