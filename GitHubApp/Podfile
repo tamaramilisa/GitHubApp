@@ -10,8 +10,6 @@ target 'GitHubApp' do
   pod 'RxAlamofire'
   pod 'RXTensions', :git => 'https://github.com/degordian/RxTensions.git', :branch => 'master'
   pod 'CoconutBits', :git => 'https://github.com/degordian/CoconutBits.git', :branch => 'swift5'
-  pod 'RxRealm'
-  pod 'RealmSwift'
   pod 'SnapKit', '~> 5.0.0'
   pod "RxGesture"
   pod 'SwiftyJSON', '~> 4.0'

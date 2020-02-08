@@ -19,7 +19,7 @@ class UserDetailViewModel: UserDetailViewModelProtocol {
     var username: String
     var githubUserSubject = PublishSubject<GithubUserServerResponse>()
     
-    private var bag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     init(username: String, networkingService: UserNetworkingServiceProtocol) {
         self.username = username
@@ -28,7 +28,7 @@ class UserDetailViewModel: UserDetailViewModelProtocol {
         networkingService
             .getUser(userName: username)
             .bind(to: githubUserSubject)
-            .disposed(by: bag)
+            .disposed(by: disposeBag)
         
     }
 }

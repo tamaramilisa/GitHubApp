@@ -44,7 +44,8 @@ class UserDetailViewController: UIViewController {
     init(viewModel: UserDetailViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        title = "User detail"
+        navigationItem.largeTitleDisplayMode = .never
+        title = "User details"
         view.backgroundColor = UIColor.appColor(.backgroundColor)
     }
 
@@ -69,8 +70,7 @@ class UserDetailViewController: UIViewController {
                 case .error(let err):
                     print("Err: \(err)")
                 }
-            })
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
         urlLabel.rx.tapGesture().when(.recognized)
             .map({ _ in return () })
@@ -78,8 +78,7 @@ class UserDetailViewController: UIViewController {
                 guard let user = self?.user, let urlString = user.url, let url = URL(string: urlString) else { return }
                 
                 UIApplication.shared.open(url)
-            }
-            .disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
     }
     
     private func setupUIWithUser(user: GithubUser) {

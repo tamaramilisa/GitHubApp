@@ -9,18 +9,47 @@
 import UIKit
 import SnapKit
 import RxSwift
-import RxGesture
 
 protocol FilterDelegate: AnyObject {
-    func filterReposBy(filter: String)
+    func filterReposBy(filter: Filter)
 }
 
-enum Filters: String {
+enum Filter {
     case stars
     case forks
     case updated
-    case issues = "help-wanted-issues"
-    case bestMatch = ""
+    case issues
+    case bestMatch
+    
+    var title: String {
+        switch self {
+        case .stars:
+            return "Stars"
+        case .forks:
+            return "Forks"
+        case .updated:
+            return "Updated"
+        case .issues:
+            return "Help wanted issues"
+        case .bestMatch:
+            return "Best match"
+        }
+    }
+    
+    var filter: String {
+        switch self {
+        case .stars:
+            return "stars"
+        case .forks:
+            return "forks"
+        case .updated:
+            return "updated"
+        case .issues:
+            return "help-wanted-issues"
+        case .bestMatch:
+            return ""
+        }
+    }
 }
 
 class FilterViewController: UIViewController {
@@ -54,45 +83,40 @@ class FilterViewController: UIViewController {
     }
     
     private func setupRx() {
-        starsButton.rx.tapGesture().when(.recognized)
-            .map({ _ in return () })
-            .bind { [weak self] _ in
-                self?.delegate?.filterReposBy(filter: Filters.stars.rawValue)
+        starsButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.delegate?.filterReposBy(filter: Filter.stars)
                 self?.dismiss(animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
-        forksButton.rx.tapGesture().when(.recognized)
-            .map({ _ in return () })
-            .bind { [weak self] _ in
-                self?.delegate?.filterReposBy(filter: Filters.forks.rawValue)
+        forksButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.delegate?.filterReposBy(filter: Filter.forks)
                 self?.dismiss(animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
-        updatedButton.rx.tapGesture().when(.recognized)
-            .map({ _ in return () })
-            .bind { [weak self] _ in
-                self?.delegate?.filterReposBy(filter: Filters.updated.rawValue)
+        updatedButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.delegate?.filterReposBy(filter: Filter.updated)
                 self?.dismiss(animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
-        issuesButton.rx.tapGesture().when(.recognized)
-        .map({ _ in return () })
-        .bind { [weak self] _ in
-            self?.delegate?.filterReposBy(filter: Filters.issues.rawValue)
-            self?.dismiss(animated: true, completion: nil)
-        }
-        .disposed(by: disposeBag)
-        
-        defaultButton.rx.tapGesture().when(.recognized)
-            .map({ _ in return () })
-            .bind { [weak self] _ in
-                self?.delegate?.filterReposBy(filter: Filters.bestMatch.rawValue)
+        issuesButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.delegate?.filterReposBy(filter: Filter.issues)
                 self?.dismiss(animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
+        
+        defaultButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.delegate?.filterReposBy(filter: Filter.bestMatch)
+                self?.dismiss(animated: true, completion: nil)
+            }).disposed(by: disposeBag)
     }
     
 }
@@ -107,7 +131,7 @@ private extension FilterViewController {
             make.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        starsButton.setTitle("Stars", for: UIControl.State())
+        starsButton.setTitle(Filter.stars.title, for: UIControl.State())
         starsButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(forksButton)
@@ -117,7 +141,7 @@ private extension FilterViewController {
             make.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        forksButton.setTitle("Forks", for: UIControl.State())
+        forksButton.setTitle(Filter.forks.title, for: UIControl.State())
         forksButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(updatedButton)
@@ -127,7 +151,7 @@ private extension FilterViewController {
             make.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        updatedButton.setTitle("Updated", for: UIControl.State())
+        updatedButton.setTitle(Filter.updated.title, for: UIControl.State())
         updatedButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(issuesButton)
@@ -137,7 +161,7 @@ private extension FilterViewController {
             make.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        issuesButton.setTitle("Issues", for: UIControl.State())
+        issuesButton.setTitle(Filter.issues.title, for: UIControl.State())
         issuesButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(defaultButton)
@@ -147,7 +171,7 @@ private extension FilterViewController {
             make.right.equalToSuperview().inset(24)
             make.height.equalTo(44)
         }
-        defaultButton.setTitle("Default", for: UIControl.State())
+        defaultButton.setTitle(Filter.bestMatch.title, for: UIControl.State())
         defaultButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
     }
 }

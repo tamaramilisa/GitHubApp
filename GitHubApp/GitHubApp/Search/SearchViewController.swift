@@ -15,11 +15,15 @@ class SearchViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     private let customSearchBar = CustomSearchView()
+    private let filterByView = UIView()
+    private let filterByLabel = UILabel()
+    
     private let tableView = UITableView()
     private let repositoryCellReuseIndentifier = "GithubRepositoryCell"
     private let emptyResultsCellReuseIdentifier = "EmptyResultsCell"
     
     private let activityIndicator = UIActivityIndicatorView()
+    private let activityIndicatorBackgrounView = UIView()
     
     private var dataSource: [SearchCellConfiguration] = [EmptyResultState.noQuery]
     
@@ -47,11 +51,11 @@ class SearchViewController: UIViewController {
         viewModel.searchResult
             .startWith(.empty(.noQuery))
             .subscribe(onNext: { [weak self] response in
+                self?.activityIndicatorBackgrounView.isHidden = true
                 self?.activityIndicator.stopAnimating()
                 switch response {
                 case .success(let repositories):
-                    self?.dataSource = repositories
-                    self?.tableView.reloadData()
+                    self?.viewModel.reposRelay.accept(repositories)
                 case .error(let error):
                     self?.dataSource = [error]
                     self?.tableView.reloadData()
@@ -61,14 +65,32 @@ class SearchViewController: UIViewController {
                 }
             }).disposed(by: disposeBag)
         
+        viewModel.filterSubject
+            .startWith(Filter.bestMatch)
+            .subscribe(onNext: { [weak self] (filter) in
+                self?.filterByLabel.text = "Sort: \(filter.title)"
+            }).disposed(by: disposeBag)
+        
+        viewModel.reposRelay
+            .skip(1)
+            .subscribe(onNext: { [weak self] (repos) in
+                self?.dataSource = repos
+                self?.tableView.reloadData()
+            }).disposed(by: disposeBag)
+        
         customSearchBar.searchBar.rx.text
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] (text) in
                 guard let `self` = self else { return }
-                guard let `text` = text, !text.isEmpty else { return }
+                guard let `text` = text, !text.isEmpty else {
+                    self.dataSource = [EmptyResultState.noQuery]
+                    self.tableView.reloadData()
+                    return
+                }
             
+                self.activityIndicatorBackgrounView.isHidden = false
                 self.activityIndicator.startAnimating()
-                self.viewModel.searchQuerySubject.onNext((text, ""))
+                self.viewModel.querySubject.onNext(text)
             }).disposed(by: disposeBag)
         
         customSearchBar.searchBar.rx.searchButtonClicked
@@ -79,13 +101,23 @@ class SearchViewController: UIViewController {
             }).disposed(by: disposeBag)
         
         customSearchBar.filterImageView.rx.tapGesture().when(.recognized)
-        .map({ _ in return () })
-        .bind { [weak self] _ in
-            guard let `self` = self else { return }
+            .map({ _ in return () })
+            .bind { [weak self] _ in
+                guard let `self` = self else { return }
             
-            Navigator.shared.presentFilterScreen(navigationController: self.navigationController, delegate: self)
-        }
-        .disposed(by: disposeBag)
+                Navigator.shared.presentFilterScreen(navigationController: self.navigationController, delegate: self)
+            }.disposed(by: disposeBag)
+        
+        tableView.rx.willDisplayCell
+            .map { $0.indexPath.row }
+            .withLatestFrom(viewModel.pageSubject) { ($1, $0) }
+            .filter { [weak self] (page, index) -> Bool in
+                print(page)
+                return self?.viewModel.shouldIncrementPageNumber(page: page, index: index) ?? false
+            }
+            .map { $0.0 + 1 }
+            .bind(to: viewModel.pageSubject)
+            .disposed(by: disposeBag)
     }
 }
 
@@ -99,20 +131,51 @@ private extension SearchViewController {
             make.height.equalTo(44)
         }
         
+        view.addSubview(filterByView)
+        filterByView.snp.makeConstraints { (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(customSearchBar.snp.bottom)
+            make.height.equalTo(30)
+        }
+        filterByView.backgroundColor = UIColor.appColor(.cellBackgroundColor)?.withAlphaComponent(0.05)
+        
+        filterByView.addSubview(filterByLabel)
+        filterByLabel.snp.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(16)
+            make.left.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(24)
+        }
+        filterByLabel.text = "Sort:"
+        filterByLabel.font = UIFont.systemFont(ofSize: 16)
+        filterByLabel.textColor = UIColor.appColor(.titleTextColor)?.withAlphaComponent(0.5)
+        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(customSearchBar.snp.bottom)
+            make.top.equalTo(filterByView.snp.bottom)
             make.left.right.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottomMargin)
         }
         tableView.keyboardDismissMode = .onDrag
         
-        view.addSubview(activityIndicator)
+        view.addSubview(activityIndicatorBackgrounView)
+        activityIndicatorBackgrounView.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+            make.height.equalTo(70)
+            make.width.equalTo(70)
+        }
+        activityIndicatorBackgrounView.backgroundColor = UIColor.appColor(.cellBackgroundColor)?.withAlphaComponent(0.4)
+        activityIndicatorBackgrounView.layer.cornerRadius = 35
+        activityIndicatorBackgrounView.clipsToBounds = true
+        activityIndicatorBackgrounView.isHidden = true
+        
+        activityIndicatorBackgrounView.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
         activityIndicator.style = .whiteLarge
         activityIndicator.isUserInteractionEnabled = false
+        
     }
     
     
@@ -154,6 +217,7 @@ private extension SearchViewController {
             return UITableViewCell()
         }
                    
+        filterByView.isHidden = true
         cell.configure(state: state)
 
         return cell
@@ -165,6 +229,7 @@ private extension SearchViewController {
             return UITableViewCell()
         }
         
+        filterByView.isHidden = false
         if let repository = dataSource[indexPath.row] as? GithubRepository {
             cell.setup(with: repository)
             observeRepositoryCellTapps(cell)
@@ -193,9 +258,10 @@ private extension SearchViewController {
 }
 
 extension SearchViewController: FilterDelegate {
-    func filterReposBy(filter: String) {
+    func filterReposBy(filter: Filter) {
         guard let query = customSearchBar.searchBar.text else { return }
+        activityIndicatorBackgrounView.isHidden = false
         activityIndicator.startAnimating()
-        viewModel.searchQuerySubject.onNext((query, filter))
+        viewModel.filterSubject.onNext(filter)
     }
 }

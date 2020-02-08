@@ -29,7 +29,9 @@ class UserNetworkingService: UserNetworkingServiceProtocol {
                 } catch let err {
                     return .error(err)
                 }
-                
-        }
+            }
+            .catchError { err -> Observable<GithubUserServerResponse> in
+                return Observable.just(.error(err))
+            }
     }
 }

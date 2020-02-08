@@ -33,13 +33,13 @@
 		32D6201423E4681900002CD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32D6201323E4681900002CD6 /* Assets.xcassets */; };
 		32D6201723E4681900002CD6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32D6201523E4681900002CD6 /* LaunchScreen.storyboard */; };
 		32FBCBBA23E47056002268D1 /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBB923E47056002268D1 /* RootNavigationController.swift */; };
-		32FBCBDB23E5DFEA002268D1 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBDA23E5DFEA002268D1 /* Coordinator.swift */; };
+		32FBCBDB23E5DFEA002268D1 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBDA23E5DFEA002268D1 /* Navigator.swift */; };
 		32FBCBDD23E5E0EC002268D1 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBDC23E5E0EC002268D1 /* SearchViewController.swift */; };
 		32FBCBDF23E5E0FF002268D1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBDE23E5E0FF002268D1 /* SearchViewModel.swift */; };
 		32FBCBE123E5E5A4002268D1 /* SearchNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBE023E5E5A4002268D1 /* SearchNetworkingService.swift */; };
 		32FBCBE323E5E61B002268D1 /* GithubRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBE223E5E61B002268D1 /* GithubRepository.swift */; };
 		32FBCBE623E5E66E002268D1 /* GithubRepositoryServerResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FBCBE523E5E66E002268D1 /* GithubRepositoryServerResult.swift */; };
-		D21983C53203F0110BD0C79A /* Pods_GitHubApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A586A4623836DDFC3785FF /* Pods_GitHubApp.framework */; };
+		73EE95318639040C0CAB7EAB /* Pods_GitHubApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37D5FC25F760344F19F661CF /* Pods_GitHubApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,13 +71,13 @@
 		32D6201623E4681900002CD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		32D6201823E4681900002CD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32FBCBB923E47056002268D1 /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
-		32FBCBDA23E5DFEA002268D1 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		32FBCBDA23E5DFEA002268D1 /* Navigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
 		32FBCBDC23E5E0EC002268D1 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		32FBCBDE23E5E0FF002268D1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		32FBCBE023E5E5A4002268D1 /* SearchNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNetworkingService.swift; sourceTree = "<group>"; };
 		32FBCBE223E5E61B002268D1 /* GithubRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubRepository.swift; sourceTree = "<group>"; };
 		32FBCBE523E5E66E002268D1 /* GithubRepositoryServerResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubRepositoryServerResult.swift; sourceTree = "<group>"; };
-		77A586A4623836DDFC3785FF /* Pods_GitHubApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		37D5FC25F760344F19F661CF /* Pods_GitHubApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2FEC53BE1C830B038B28467 /* Pods-GitHubApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp.debug.xcconfig"; sourceTree = "<group>"; };
 		AEE1EAC6B822364413F22BDC /* Pods-GitHubApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D21983C53203F0110BD0C79A /* Pods_GitHubApp.framework in Frameworks */,
+				73EE95318639040C0CAB7EAB /* Pods_GitHubApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,7 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				32D6200A23E4681700002CD6 /* AppDelegate.swift */,
-				32FBCBD723E5DFDD002268D1 /* Coordinator */,
+				32FBCBD723E5DFDD002268D1 /* Navigator */,
 				32FBCBD423E5DF72002268D1 /* Models */,
 				32FBCBB823E4702A002268D1 /* Top Controllers */,
 				32FBCBB523E46F72002268D1 /* Services */,
@@ -252,12 +252,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		32FBCBD723E5DFDD002268D1 /* Coordinator */ = {
+		32FBCBD723E5DFDD002268D1 /* Navigator */ = {
 			isa = PBXGroup;
 			children = (
-				32FBCBDA23E5DFEA002268D1 /* Coordinator.swift */,
+				32FBCBDA23E5DFEA002268D1 /* Navigator.swift */,
 			);
-			path = Coordinator;
+			path = Navigator;
 			sourceTree = "<group>";
 		};
 		32FBCBE423E5E667002268D1 /* GithubRepository */ = {
@@ -275,7 +275,7 @@
 		ECFE13E431F4AF9BB63A5412 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				77A586A4623836DDFC3785FF /* Pods_GitHubApp.framework */,
+				37D5FC25F760344F19F661CF /* Pods_GitHubApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -300,7 +300,7 @@
 				32D6200323E4681700002CD6 /* Sources */,
 				32D6200423E4681700002CD6 /* Frameworks */,
 				32D6200523E4681700002CD6 /* Resources */,
-				1F94AB588B8E24B768C7FDBA /* [CP] Embed Pods Frameworks */,
+				CEF2CD98BD79B189EFA557FF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -359,54 +359,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1F94AB588B8E24B768C7FDBA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/CoconutBits/CoconutBits.framework",
-				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
-				"${BUILT_PRODUCTS_DIR}/RXTensions/RXTensions.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/RxAlamofire/RxAlamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRealm/RxRealm.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoconutBits.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RXTensions.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAlamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRealm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		463F3EE78F39061930753416 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -427,6 +379,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CEF2CD98BD79B189EFA557FF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CoconutBits/CoconutBits.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/RXTensions/RXTensions.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAlamofire/RxAlamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoconutBits.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RXTensions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAlamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -450,7 +444,7 @@
 				32689F2E23E5FACE00F904B0 /* AlamofireNetworking.swift in Sources */,
 				326B218F23E9D07B00CA5F04 /* RepoDetailViewController.swift in Sources */,
 				32689F2A23E5EC1A00F904B0 /* SearchCellConfiguration.swift in Sources */,
-				32FBCBDB23E5DFEA002268D1 /* Coordinator.swift in Sources */,
+				32FBCBDB23E5DFEA002268D1 /* Navigator.swift in Sources */,
 				32FBCBBA23E47056002268D1 /* RootNavigationController.swift in Sources */,
 				32FBCBE323E5E61B002268D1 /* GithubRepository.swift in Sources */,
 				32689F2C23E5FAB200F904B0 /* GitHubAppRouter.swift in Sources */,

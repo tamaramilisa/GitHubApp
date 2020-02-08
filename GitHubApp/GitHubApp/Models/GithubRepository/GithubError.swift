@@ -14,6 +14,6 @@ class GithubError: SearchCellConfiguration {
     }
     
     var title: String {
-        return "Neki naslov"
+        return error.localizedDescription
     }
 }

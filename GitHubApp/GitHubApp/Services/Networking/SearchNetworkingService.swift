@@ -12,18 +12,18 @@ import RxAlamofire
 import SwiftyJSON
 
 protocol SearchNetworkingServiceProtocol {
-    func search(query: String, sortBy: String) -> Observable<GithubRepositoryServerResult>
+    func search(query: String, sortBy: String, page: Int, perPage: Int) -> Observable<GithubRepositoryServerResult>
 }
 
 class SearchNetworkingService: SearchNetworkingServiceProtocol {
     let networking = AlamofireNetworking()
     
-    func search(query: String, sortBy: String = "") -> Observable<GithubRepositoryServerResult> {
+    func search(query: String, sortBy: String = "", page: Int, perPage: Int) -> Observable<GithubRepositoryServerResult> {
         let params: [String : Any] = [
             "q" : query,
             "sort" : sortBy,
-            "page" : 1,
-            "per_page" : 40
+            "page" : page,
+            "per_page" : perPage
         ]
         
         return networking
@@ -38,6 +38,9 @@ class SearchNetworkingService: SearchNetworkingServiceProtocol {
                 } catch let err {
                     return .error(GithubError(err))
                 }
+            }
+            .catchError { err -> Observable<GithubRepositoryServerResult> in
+                return Observable.just(.error(GithubError(err)))
             }
             
         }

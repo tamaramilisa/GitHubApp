@@ -46,7 +46,8 @@ class RepoDetailViewController: UIViewController {
     init(viewModel: RepoDetailViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        title = "Repo detail"
+        navigationItem.largeTitleDisplayMode = .never
+        title = "Repo details"
         view.backgroundColor = UIColor.appColor(.backgroundColor)
     }
 
@@ -68,8 +69,7 @@ class RepoDetailViewController: UIViewController {
                 guard let userName = self?.viewModel.githubRepo.owner?.userName else { return }
                 
                 Navigator.shared.pushToUserDetail(navigationController: self?.navigationController, username: userName)
-            }
-            .disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
         
         urlLabel.rx.tapGesture().when(.recognized)
             .map({ _ in return () })
@@ -77,8 +77,7 @@ class RepoDetailViewController: UIViewController {
                 guard let urlString = self?.viewModel.githubRepo.url, let url = URL(string: urlString) else { return }
                 
                 UIApplication.shared.open(url)
-            }
-            .disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
     }
 }
 
