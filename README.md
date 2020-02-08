@@ -5,6 +5,6 @@ This repository contains a simple, native iOS project which implements MVVM arch
 * Language: Swift
 * Architecture: MVVM
 * Networking: Alamofire
-* Other libraries/frameworks/tools: RxSwift, SnapKit, SwiftyJSON, Kingfisher
+* Other libraries/frameworks: RxSwift, SnapKit, SwiftyJSON, Kingfisher
 * Dark mode supported :)
 
