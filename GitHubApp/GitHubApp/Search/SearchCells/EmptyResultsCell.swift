@@ -16,7 +16,7 @@ enum EmptyResultsCellState: String {
 
 class EmptyResultsCell: UITableViewCell {
     private let iconImageViewDimensions: CGFloat = 100
-    private let cellHeight: CGFloat = UIScreen.main.bounds.height / 2
+    private let cellHeight: CGFloat = 400
     
     private let containerView = UIView()
     private var descriptionLabel = UILabel()
@@ -54,7 +54,7 @@ private extension EmptyResultsCell {
     func render() {
         contentView.addSubview(containerView)
         containerView.snp.makeConstraints { (make) in
-            make.left.top.right.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
             make.height.equalTo(cellHeight)
         }
         containerView.backgroundColor = UIColor.AppColors.backgroundColor
@@ -69,7 +69,6 @@ private extension EmptyResultsCell {
         
         containerView.addSubview(descriptionLabel)
         descriptionLabel.snp.makeConstraints { (make) in
-            make.centerX.equalToSuperview()
             make.top.equalTo(iconImageView.snp.bottom).offset(16)
             make.left.equalToSuperview().offset(24)
             make.right.equalToSuperview().inset(24)

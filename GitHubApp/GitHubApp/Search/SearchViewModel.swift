@@ -63,8 +63,7 @@ class SearchViewModel: SearchViewModelProtocol {
     }
     
     func resetPagination() {
-        nextPage = 0
-        nextPageSubject.onNext(())
+        nextPage = 1
     }
     
     private func mapServerResult(serverResult: GithubRepositoryServerResult) -> GithubRepositoryServerResult {

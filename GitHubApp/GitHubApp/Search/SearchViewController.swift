@@ -25,8 +25,6 @@ class SearchViewController: UIViewController {
     private let activityIndicator = UIActivityIndicatorView()
     private let activityIndicatorBackgrounView = UIView()
     
-    private let refreshControl = UIRefreshControl()
-    
     private var dataSource: [SearchCellConfiguration] = [EmptyResultState.noQuery]
     
     init(viewModel: SearchViewModelProtocol) {
@@ -55,18 +53,17 @@ class SearchViewController: UIViewController {
             .subscribe(onNext: { [weak self] response in
                 self?.activityIndicatorBackgrounView.isHidden = true
                 self?.activityIndicator.stopAnimating()
-                self?.refreshControl.endRefreshing()
                 switch response {
                 case .success(let repositories, _):
                     self?.dataSource = repositories
                     self?.tableView.reloadData()
                 case .error(let error):
                     self?.dataSource = [error]
-                    self?.scrollToTopAndResetPagination()
+                    self?.scrollToTop()
                     self?.tableView.reloadData()
                 case .empty(let state):
                     self?.dataSource = [state]
-                    self?.scrollToTopAndResetPagination()
+                    self?.scrollToTop()
                     self?.tableView.reloadData()
                 }
             }).disposed(by: disposeBag)
@@ -82,8 +79,8 @@ class SearchViewController: UIViewController {
             .subscribe(onNext: { [weak self] _ in
                 self?.activityIndicatorBackgrounView.isHidden = false
                 self?.activityIndicator.startAnimating()
-                
-                self?.scrollToTopAndResetPagination()
+                self?.viewModel.resetPagination()
+                self?.scrollToTop()
             }).disposed(by: disposeBag)
         
         customSearchBar.searchBar.rx.text
@@ -92,13 +89,10 @@ class SearchViewController: UIViewController {
                 guard let `self` = self else { return }
                 guard let `text` = text, !text.isEmpty else {
                     self.dataSource = [EmptyResultState.noQuery]
-                    self.activityIndicatorBackgrounView.isHidden = true
-                    self.activityIndicator.stopAnimating()
-                    self.scrollToTopAndResetPagination()
                     self.tableView.reloadData()
                     return
                 }
-            
+                
                 self.viewModel.querySubject.onNext(text)
             }).disposed(by: disposeBag)
         
@@ -116,18 +110,11 @@ class SearchViewController: UIViewController {
             
                 Navigator.shared.presentFilterScreen(navigationController: self.navigationController, delegate: self)
             }.disposed(by: disposeBag)
-        
-        refreshControl.rx
-            .controlEvent(UIControl.Event.valueChanged)
-            .bind { [weak self] in
-                self?.viewModel.resetPagination()
-            }.disposed(by: disposeBag)
     }
     
-    private func scrollToTopAndResetPagination() {
+    private func scrollToTop() {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-        viewModel.resetPagination()
     }
 }
 
@@ -196,7 +183,6 @@ extension SearchViewController: UITableViewDataSource {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
-        tableView.refreshControl = refreshControl
         
         tableView.estimatedRowHeight = UITableView.automaticDimension
     }
@@ -281,7 +267,8 @@ extension SearchViewController: FilterDelegate {
     func filterReposBy(filter: Filter) {
         activityIndicatorBackgrounView.isHidden = false
         activityIndicator.startAnimating()
-        scrollToTopAndResetPagination()
+        viewModel.resetPagination()
+        scrollToTop()
         viewModel.filterSubject.onNext(filter)
     }
 }
