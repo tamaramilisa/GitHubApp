@@ -46,7 +46,7 @@ class UserDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationItem.largeTitleDisplayMode = .never
         title = "User details"
-        view.backgroundColor = UIColor.AppColors.backgroundColor
+        view.backgroundColor = UIColor.appColor(.backgroundColor)
     }
 
     required init?(coder: NSCoder) {
@@ -149,7 +149,7 @@ private extension UserDetailViewController {
             make.left.equalToSuperview().offset(20)
             make.right.equalToSuperview().inset(20)
         }
-        usernameLabel.textColor = UIColor.AppColors.titleTextColor
+        usernameLabel.textColor = UIColor.appColor(.titleTextColor)
         usernameLabel.font = UIFont.systemFont(ofSize: 24)
         usernameLabel.textAlignment = .center
     }
@@ -222,7 +222,7 @@ private extension UserDetailViewController {
             make.top.equalTo(secondSeparatorView.snp.bottom).offset(20)
             make .right.equalToSuperview().inset(24)
         }
-        typeLabel.textColor = UIColor.AppColors.titleTextColor
+        typeLabel.textColor = UIColor.appColor(.titleTextColor)
         typeLabel.font = UIFont.systemFont(ofSize: 18)
         
         view.addSubview(locationLabel)
@@ -231,7 +231,7 @@ private extension UserDetailViewController {
             make.top.equalTo(typeLabel.snp.bottom).offset(20)
             make .right.equalToSuperview().inset(24)
         }
-        locationLabel.textColor = UIColor.AppColors.titleTextColor
+        locationLabel.textColor = UIColor.appColor(.titleTextColor)
         locationLabel.font = UIFont.systemFont(ofSize: 18)
         
         view.addSubview(numberOfReposLabel)
@@ -240,7 +240,7 @@ private extension UserDetailViewController {
             make.top.equalTo(locationLabel.snp.bottom).offset(20)
             make .right.equalToSuperview().inset(24)
         }
-        numberOfReposLabel.textColor = UIColor.AppColors.titleTextColor
+        numberOfReposLabel.textColor = UIColor.appColor(.titleTextColor)
         numberOfReposLabel.font = UIFont.systemFont(ofSize: 18)
         
         view.addSubview(numberOfGistsLabel)
@@ -249,7 +249,7 @@ private extension UserDetailViewController {
             make.top.equalTo(numberOfReposLabel.snp.bottom).offset(20)
             make .right.equalToSuperview().inset(24)
         }
-        numberOfGistsLabel.textColor = UIColor.AppColors.titleTextColor
+        numberOfGistsLabel.textColor = UIColor.appColor(.titleTextColor)
         numberOfGistsLabel.font = UIFont.systemFont(ofSize: 18)
         
         view.addSubview(urlLabel)

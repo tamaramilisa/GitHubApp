@@ -68,7 +68,7 @@ class FilterViewController: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         title = "Filter by:"
-        view.backgroundColor = UIColor.AppColors.backgroundColor
+        view.backgroundColor = UIColor.appColor(.backgroundColor)
     }
     
     required init?(coder: NSCoder) {
@@ -132,7 +132,7 @@ private extension FilterViewController {
             make.height.equalTo(44)
         }
         starsButton.setTitle(Filter.stars.title, for: UIControl.State())
-        starsButton.setTitleColor(UIColor.AppColors.titleTextColor, for: UIControl.State())
+        starsButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(forksButton)
         forksButton.snp.makeConstraints { (make) in
@@ -142,7 +142,7 @@ private extension FilterViewController {
             make.height.equalTo(44)
         }
         forksButton.setTitle(Filter.forks.title, for: UIControl.State())
-        forksButton.setTitleColor(UIColor.AppColors.titleTextColor, for: UIControl.State())
+        forksButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(updatedButton)
         updatedButton.snp.makeConstraints { (make) in
@@ -152,7 +152,7 @@ private extension FilterViewController {
             make.height.equalTo(44)
         }
         updatedButton.setTitle(Filter.updated.title, for: UIControl.State())
-        updatedButton.setTitleColor(UIColor.AppColors.titleTextColor, for: UIControl.State())
+        updatedButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(issuesButton)
         issuesButton.snp.makeConstraints { (make) in
@@ -162,7 +162,7 @@ private extension FilterViewController {
             make.height.equalTo(44)
         }
         issuesButton.setTitle(Filter.issues.title, for: UIControl.State())
-        issuesButton.setTitleColor(UIColor.AppColors.titleTextColor, for: UIControl.State())
+        issuesButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
         
         view.addSubview(defaultButton)
         defaultButton.snp.makeConstraints { (make) in
@@ -172,6 +172,6 @@ private extension FilterViewController {
             make.height.equalTo(44)
         }
         defaultButton.setTitle(Filter.bestMatch.title, for: UIControl.State())
-        defaultButton.setTitleColor(UIColor.AppColors.titleTextColor, for: UIControl.State())
+        defaultButton.setTitleColor(UIColor.appColor(.titleTextColor), for: UIControl.State())
     }
 }
