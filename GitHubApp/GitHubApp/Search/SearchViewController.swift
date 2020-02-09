@@ -106,7 +106,7 @@ class SearchViewController: UIViewController {
         customSearchBar.filterImageView.rx.tapGesture().when(.recognized)
             .map({ _ in return () })
             .bind { [weak self] _ in
-                guard let `self` = self else { return }
+                guard let `self` = self, let text = self.customSearchBar.searchBar.text, !text.isEmpty else  { return }
             
                 Navigator.shared.presentFilterScreen(navigationController: self.navigationController, delegate: self)
             }.disposed(by: disposeBag)
